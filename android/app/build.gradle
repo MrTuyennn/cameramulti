@@ -45,5 +45,6 @@ flutter {
 
 
 dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'org.greenrobot:eventbus:3.1.1'
 }
