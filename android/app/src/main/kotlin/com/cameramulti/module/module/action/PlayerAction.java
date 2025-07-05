@@ -40,10 +40,11 @@ import java.util.Queue;
 
 public class PlayerAction {
 
-    public boolean isStartRead = true;
+    public boolean isStartRead = false;
     private static final int VIDEO_BUF_SIZE = 5 * 1024 * 1024;
     private static final int FRAME_INFO_SIZE = 16;
     private DeviceBean deviceBean;
+    public static final int SUBSTREAM = 1;
     public int decodeType = NativeMediaPlayer.HARDDECODE;
 
     private AVAPIs av = null;
@@ -51,6 +52,7 @@ public class PlayerAction {
     private boolean audioOpen = false;
     // 音频解码器
     private AACDecoderUtil audioUtil;
+    private int connectChannel = 0;
     private Activity context;
 
     public int recordSampleRate = 48000;
@@ -64,19 +66,25 @@ public class PlayerAction {
 
     public static final int MAXCHANGE = 40; // frames
     public static final String RECORD_TAG = "RECORD_AUDIO";
+    public int writeFilePlayerId = 3;
 
     // public File audioFile ,orignFile;
 
-    public PlayerAction(DeviceBean deviceBean, int decodeType, Activity context, TextView textView) {
-        this.deviceBean = deviceBean;
-        this.decodeType = decodeType;
+    public PlayerAction(DeviceBean deviceBean, int decodeType, Activity context,TextView textView,int channel){
+        this.deviceBean = deviceBean ;
+        this.decodeType = decodeType ;
         this.audioUtil = new AACDecoderUtil();
         this.context = context;
         this.sendFrames = textView;
         audioQueue = new LinkedList<>();
-        // FileUtils.getSDCardPath();
-        // audioFile = FileUtils.createFile("reciveAudioQueue.aac");
-        // orignFile = FileUtils.createFile("originAudioFile.aac");
+        this.connectChannel = channel;
+        //FileUtils.getSDCardPath();
+//        FileUtils.getAndrod12SDCardPath();
+//        audioFile = FileUtils.createFile(context,"reciveAudioQueue.pcm");
+//        //orignFile = FileUtils.createFile(context,"originAudioFile.aac");
+//        if(isWriteToFile&&deviceBean.getPlayerId()==writeFilePlayerId) {
+//            vidioFile = FileUtils.createFile(context, "newReciveaudio.h265");
+//        }
     }
 
     /**

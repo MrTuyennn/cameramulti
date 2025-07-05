@@ -12,8 +12,8 @@ class CameraMulti extends StatefulWidget {
 
 class _CameraMultiState extends State<CameraMulti> {
   final List<Map<String, String>> lsCameraMulti = [
-    {'uuid': 'CU2X6J5XA2GZVE3X111A', 'user': 'admin', 'pass': 'yp1ied'},
-    {'uuid': 'A4GC3KJV6WB8ZU15111A', 'user': 'admin', 'pass': 'klNNr5'},
+    {'uuid': 'DHN529DHV93VYPT6111A', 'user': 'admin', 'pass': 'WIo59J'},
+    {'uuid': '5DFXTGZCRY39KDZM111A', 'user': 'admin', 'pass': 'kh7GxR'},
     {'uuid': '5HNHTEUYUT2137Y1111A', 'user': 'admin', 'pass': 'v5DJ4I'},
     {'uuid': '4ACGZU3FNY5HZ566111A', 'user': 'admin', 'pass': 'FH2syP'},
     {'uuid': 'AL1HVCPT9G1TLYSH111A', 'user': 'admin', 'pass': 'cPy3to'},

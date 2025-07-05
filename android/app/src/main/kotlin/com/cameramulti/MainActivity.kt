@@ -10,7 +10,7 @@ class MainActivity: FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         flutterEngine.platformViewsController.registry.registerViewFactory(
             AppConstant.CHANNEL_CAMERA_MULTI,
-          CameraMultiFactory(flutterEngine.dartExecutor.binaryMessenger)
+          CameraMultiFactory(flutterEngine.dartExecutor.binaryMessenger,this)
         )
     }
 }
