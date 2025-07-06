@@ -56,15 +56,15 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
 
     private NativeMediaPlayer nativeMediaPlayer;
 
-    private final String UID = "DHN529DHV93VYPT6111A";
-    private final String PWD = "WIo59J";
+    private final String UID = "CU2X6J5XA2GZVE3X111A";
+    private final String PWD = "Rihsk9";
 
     public String[] deviceUids ={
-            "DHN529DHV93VYPT6111A",
+            "CU2X6J5XA2GZVE3X111A",
     };
 
     public String[] devicePwd = {
-            "WIo59J",
+            "Rihsk9",
           };
 
     private int screenWidth = 0,screenHeight = 0;
