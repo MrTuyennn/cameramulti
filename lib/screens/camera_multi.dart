@@ -12,7 +12,7 @@ class CameraMulti extends StatefulWidget {
 
 class _CameraMultiState extends State<CameraMulti> {
   final List<Map<String, String>> lsCameraMulti = [
-    {'uuid': 'DHN529DHV93VYPT6111A', 'user': 'admin', 'pass': 'WIo59J'},
+    {'uuid': 'CU2X6J5XA2GZVE3X111A', 'user': 'admin', 'pass': 'Rihsk9'},
     {'uuid': '5DFXTGZCRY39KDZM111A', 'user': 'admin', 'pass': 'kh7GxR'},
     {'uuid': '5HNHTEUYUT2137Y1111A', 'user': 'admin', 'pass': 'v5DJ4I'},
     {'uuid': '4ACGZU3FNY5HZ566111A', 'user': 'admin', 'pass': 'FH2syP'},
@@ -25,7 +25,12 @@ class _CameraMultiState extends State<CameraMulti> {
   @override
   void initState() {
     super.initState();
-    creationParams = <String, dynamic>{"cameraMulti": lsCameraMulti};
+    creationParams = <String, dynamic>{
+      "uuid": "CU2X6J5XA2GZVE3X111A",
+      "pass": "wWvNzW",
+      "height": 700,
+      "width": 1000
+    };
   }
 
   @override

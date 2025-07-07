@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -56,16 +57,10 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
 
     private NativeMediaPlayer nativeMediaPlayer;
 
-    private final String UID = "CU2X6J5XA2GZVE3X111A";
-    private final String PWD = "Rihsk9";
+    private  String UID = "";
+    private  String PWD = "";
 
-    public String[] deviceUids ={
-            "CU2X6J5XA2GZVE3X111A",
-    };
 
-    public String[] devicePwd = {
-            "Rihsk9",
-          };
 
     private int screenWidth = 0,screenHeight = 0;
 
@@ -82,17 +77,40 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
         this.activity = activity;
         rootView = LayoutInflater.from(context).inflate(R.layout.camera_view_multi, null);
         EventBus.getDefault().register(this);
+
+        // Parse creationParams
+        if (args instanceof Map) {
+            Map<String, Object> creationParams = (Map<String, Object>) args;
+            if (creationParams.containsKey("uuid")) {
+                UID = (String) creationParams.get("uuid");
+            }
+            if (creationParams.containsKey("pass")) {
+                PWD = (String) creationParams.get("pass");
+            }
+            if (creationParams.containsKey("width")) {
+                screenWidth = ((Number) creationParams.get("width")).intValue();
+            }
+            if (creationParams.containsKey("height")) {
+                screenHeight = ((Number) creationParams.get("height")).intValue();
+            }
+        }
+
+
         initTUTK();
         initView();
-        ViewTreeObserver obse = rootView.getViewTreeObserver();
-        obse.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                playerParent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                screenWidth= playerParent.getWidth();
-                screenHeight = playerParent.getHeight();
-            }
-        });
+
+        // Optional: If width/height is not passed, fallback to layout listener
+        if (screenWidth == 0 || screenHeight == 0) {
+            ViewTreeObserver obse = rootView.getViewTreeObserver();
+            obse.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    playerParent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    screenWidth = playerParent.getWidth();
+                    screenHeight = playerParent.getHeight();
+                }
+            });
+        }
     }
 
     private void initTUTK() {
@@ -116,6 +134,13 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
         playerViewBean.setProgressBar(rootView.findViewById(R.id.progress1));
         startConn = rootView.findViewById(R.id.startConnect);
         playerViewBeans.add(playerViewBean);
+        if (screenHeight > 0 || screenWidth > 0) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    screenWidth,
+                    screenHeight
+            );
+            playerParent.setLayoutParams(params);
+        }
         startConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,20 +154,19 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
 
     private void start() {
         players.clear();
-        for(int i=0;i<deviceUids.length&i<8;i++){
-            startPlay(i,false,false);
-        }
+        startPlay(false,false);
+
     }
 
 
 
-    private void startPlay(final int index, boolean isChange, boolean isSoftDecode) {
+    private void startPlay( boolean isChange, boolean isSoftDecode) {
         final DeviceBean deviceBean = new DeviceBean();
-        deviceBean.setPlayerId(index+1);
-        deviceBean.setDeviceUid(deviceUids[index]);
-        deviceBean.setDevicePwd(devicePwd[index]);
+        deviceBean.setPlayerId(1);
+        deviceBean.setDeviceUid(UID);
+        deviceBean.setDevicePwd(PWD);
         deviceBean.setDeviceName("admin");
-        deviceBean.setPlayerViewBeans(playerViewBeans.get(index));
+        deviceBean.setPlayerViewBeans(playerViewBeans.get(0));
         setMediaCode(deviceBean,screenWidth,screenHeight);
         if(isSoftDecode) {
             deviceBean.setPlayerAction(new PlayerAction(deviceBean, NativeMediaPlayer.SOFTDECODE, activity, null,PlayerAction.SUBSTREAM));
@@ -204,7 +228,7 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
         }
         deviceBean.getPlayerViewBeans().getProgressBar().setVisibility(View.VISIBLE);
         if(isChange){
-            players.set(index,deviceBean);
+            players.set(0,deviceBean);
         }else {
             players.add(deviceBean);
         }
