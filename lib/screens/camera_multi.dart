@@ -20,17 +20,19 @@ class _CameraMultiState extends State<CameraMulti> {
     {'uuid': 'AL1HVCPT9G1TLYSH111A', 'user': 'admin', 'pass': 'cPy3to'},
   ];
 
-  late Map<String, dynamic> creationParams;
+  Map<String, dynamic>? creationParams;
 
   @override
   void initState() {
     super.initState();
-    creationParams = <String, dynamic>{
-      "uuid": "CU2X6J5XA2GZVE3X111A",
-      "pass": "wWvNzW",
-      "height": 700,
-      "width": 1000
-    };
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   creationParams = <String, dynamic>{
+    //     "uuid": "H23R9K94ZULVDVCF111A",
+    //     "pass": "INcFwR",
+    //     "height": 300,
+    //     "width": MediaQuery.of(context).size.width
+    //   };
+    // });
   }
 
   @override
@@ -49,7 +51,12 @@ class _CameraMultiState extends State<CameraMulti> {
               child: defaultTargetPlatform == TargetPlatform.android
                   ? AndroidView(
                       viewType: ModuleChannel.viewId,
-                      creationParams: creationParams,
+                      creationParams: const {
+                        "uuid": "H23R9K94ZULVDVCF111A",
+                        "pass": "Js2nvQ",
+                        "height": 500,
+                        "width": 1000
+                      },
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
                     )

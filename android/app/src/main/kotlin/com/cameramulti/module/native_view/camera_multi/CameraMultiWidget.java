@@ -1,11 +1,9 @@
 package com.cameramulti.module.native_view.camera_multi;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,7 +45,6 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
     private static final String TAG = "CameraMultiWidget";
     private static final String LICENSE_KEY = "AQAAAMHY3vUDYAhbA/F5ekE+00jq1ACuTIznLJDK55p/jpI7riWN6bp7KYLTDrsQ3XJkzsVkJSBK3rmD3ZPAWF4JlZzn3J/qpmA3O31yfX7VxVNDXd1h3vJYFtgsjOcl9vn4c4k2oPKXHUGjtGxH3O+4Wc14AI/mkmvJIFVI2k3M2J9eanoTqXbEhLMRRpXa+tmbCzM4/L/q3NMZqc4sdErADNIb";
 
-    private Button startConn;
     private final View rootView;
     private  LinearLayout playerParent;
     private final Context context;
@@ -110,6 +106,7 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
                     screenHeight = playerParent.getHeight();
                 }
             });
+            start();
         }
     }
 
@@ -126,13 +123,11 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
 
 
     private  void initView() {
-
         playerParent = rootView.findViewById(R.id.playerParent);
         nativeMediaPlayer = new NativeMediaPlayer();
         PlayerViewBean playerViewBean = new PlayerViewBean();
         playerViewBean.setLinearLayout(rootView.findViewById(R.id.playerLin1));
         playerViewBean.setProgressBar(rootView.findViewById(R.id.progress1));
-        startConn = rootView.findViewById(R.id.startConnect);
         playerViewBeans.add(playerViewBean);
         if (screenHeight > 0 || screenWidth > 0) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -141,14 +136,7 @@ public class CameraMultiWidget implements PlatformView, MethodChannel.MethodCall
             );
             playerParent.setLayoutParams(params);
         }
-        startConn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Start button clicked");
-                start(); // gọi hàm start() để bắt đầu phát camera
-            }
-        });
-
+        start();
     }
 
 
