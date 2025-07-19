@@ -11,28 +11,11 @@ class CameraMulti extends StatefulWidget {
 }
 
 class _CameraMultiState extends State<CameraMulti> {
-  final List<Map<String, String>> lsCameraMulti = [
-    {'uuid': 'CU2X6J5XA2GZVE3X111A', 'user': 'admin', 'pass': 'Rihsk9'},
-    {'uuid': '5DFXTGZCRY39KDZM111A', 'user': 'admin', 'pass': 'kh7GxR'},
-    {'uuid': '5HNHTEUYUT2137Y1111A', 'user': 'admin', 'pass': 'v5DJ4I'},
-    {'uuid': '4ACGZU3FNY5HZ566111A', 'user': 'admin', 'pass': 'FH2syP'},
-    {'uuid': 'AL1HVCPT9G1TLYSH111A', 'user': 'admin', 'pass': 'cPy3to'},
-    {'uuid': 'AL1HVCPT9G1TLYSH111A', 'user': 'admin', 'pass': 'cPy3to'},
-  ];
-
   Map<String, dynamic>? creationParams;
 
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   creationParams = <String, dynamic>{
-    //     "uuid": "H23R9K94ZULVDVCF111A",
-    //     "pass": "INcFwR",
-    //     "height": 300,
-    //     "width": MediaQuery.of(context).size.width
-    //   };
-    // });
   }
 
   @override

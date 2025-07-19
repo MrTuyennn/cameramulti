@@ -1,5 +1,6 @@
 package com.example.cameramulti
 
+import com.cameramulti.module.native_view.camera_player.CameraPlayerFactory
 import com.example.cameramulti.module.native_view.camera_multi.CameraMultiFactory
 import com.example.cameramulti.utils.AppConstant
 import io.flutter.embedding.android.FlutterActivity
@@ -11,6 +12,11 @@ class MainActivity: FlutterActivity() {
         flutterEngine.platformViewsController.registry.registerViewFactory(
             AppConstant.CHANNEL_CAMERA_MULTI,
           CameraMultiFactory(flutterEngine.dartExecutor.binaryMessenger,this)
+        )
+
+        flutterEngine.platformViewsController.registry.registerViewFactory(
+            AppConstant.CHANNEL_CAMERA_PLAYER,
+            CameraPlayerFactory(flutterEngine.dartExecutor.binaryMessenger,this)
         )
     }
 }

@@ -1,14 +1,12 @@
 package com.xc.p2pVideo;
-
+//import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.util.Log;
 
-
 import com.cameramulti.module.module.bean.EventResult;
 
 import org.greenrobot.eventbus.EventBus;
-
 import java.nio.charset.StandardCharsets;
 
 public class NativeMediaPlayer {
@@ -25,7 +23,8 @@ public class NativeMediaPlayer {
     public static final String MUTIL_BACK = "multip_back";
     public static final String CHANGE_DECODE = "change_decode_type";
     public static final String RELEASE_DECODER = "release_decoder";
-
+    public static final String SEND_START = "start_play";
+    public static final String RECONNECT = "retry_connect";
 
     public static final int QUALITY_HIGH = 0;
     public static final int QUALITY_LOW = 1;
@@ -38,7 +37,6 @@ public class NativeMediaPlayer {
     public static final int CAM_HOME_INDOOR = 5;
     public static final int CAM_HOME_OUTDOOR = 6;
     public static final int CAM_ACCESS_F1 = 7;
-
 
 
 
@@ -113,7 +111,7 @@ public class NativeMediaPlayer {
     public int NativeCreateMediaPlayer(GLSurfaceView glView, String rtspUrl, String id, int channelId, int windowId, int streamId) {
 
         return JniCreateVideoPlayer(this, glView, rtspUrl, id,
-                    channelId, windowId, streamId);
+                channelId, windowId, streamId);
     }
 
     public static void UpdataFrameSize(int frameWidth, int frameHeight, int playerId) {
@@ -122,7 +120,7 @@ public class NativeMediaPlayer {
     }
 
     public static int drawFrame(Object mGLSurfaceView) {
-         //System.out.println("draw frame!!" + mGLSurfaceView);
+        //System.out.println("draw frame!!" + mGLSurfaceView);
         if (mGLSurfaceView == null) return -1;
         ((GLSurfaceView) mGLSurfaceView).requestRender();
         return 0;
@@ -157,7 +155,6 @@ public class NativeMediaPlayer {
                     EventBus.getDefault().post(EventResult.getResult(TIMEOUT,0,winId));
                 }
                 break;
-
         }
 
     }
