@@ -32,8 +32,8 @@ class _CameraPlayerState extends State<CameraPlayer> {
                         creationParams: const {
                           "uuid": "H23R9K94ZULVDVCF111A",
                           "pass": "Js2nvQ",
-                          "height": 500,
-                          "width": 500
+                          "height": 0,
+                          "width": 0
                         },
                         layoutDirection: TextDirection.ltr,
                         creationParamsCodec: const StandardMessageCodec(),
