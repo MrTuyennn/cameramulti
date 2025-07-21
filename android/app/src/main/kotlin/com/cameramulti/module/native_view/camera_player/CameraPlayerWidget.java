@@ -254,6 +254,10 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
         players.get(currentPlayers).getPlayerAction().stopRecord();
     }
 
+    private void ptz() {
+
+    }
+
     @Override
     public void onClick(View view) {
         if(view == ic_audio){

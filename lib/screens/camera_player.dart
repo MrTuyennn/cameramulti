@@ -13,11 +13,7 @@ class CameraPlayer extends StatefulWidget {
 class _CameraPlayerState extends State<CameraPlayer> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: kToolbarHeight,
-      ),
-      child: Container(
+    return Container(
         color: Colors.white,
         child: Column(
           children: [
@@ -50,7 +46,6 @@ class _CameraPlayerState extends State<CameraPlayer> {
                         creationParamsCodec: const StandardMessageCodec(),
                       ))
           ],
-        ),
       ),
     );
   }

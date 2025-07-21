@@ -4,7 +4,6 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 
 import com.cameramulti.module.module.action.PlayerAction;
-import com.cameramulti.module.module.action.PlayerActions;
 import com.xc.hdscreen.view.GLPlayView;
 
 import java.io.Serializable;
