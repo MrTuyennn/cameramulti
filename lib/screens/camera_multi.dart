@@ -45,7 +45,12 @@ class _CameraMultiState extends State<CameraMulti> {
                     )
                   : UiKitView(
                       viewType: ModuleChannel.viewId,
-                      creationParams: creationParams,
+                      creationParams: const {
+                        "uuid": "H23R9K94ZULVDVCF111A",
+                        "pass": "Js2nvQ",
+                        "height": 500,
+                        "width": 1000
+                      },
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
                     ))
