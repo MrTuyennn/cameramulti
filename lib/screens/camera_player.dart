@@ -1,3 +1,4 @@
+import 'package:cameramulti/components/joy_stick.dart';
 import 'package:cameramulti/utils/module_channel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,12 @@ class CameraPlayer extends StatefulWidget {
 }
 
 class _CameraPlayerState extends State<CameraPlayer> {
+ MethodChannel? channelPlayer;
+
+ void callback(x, y) {
+    print('callback x => $x and y $y');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,15 +26,18 @@ class _CameraPlayerState extends State<CameraPlayer> {
         children: [
           const Text(
             'Camera Multi',
-            style: TextStyle(decoration: TextDecoration.none, color: Colors.white, fontSize: 14),
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                color: Colors.white,
+                fontSize: 14),
           ),
           Expanded(
               child: defaultTargetPlatform == TargetPlatform.android
                   ? AndroidView(
                       viewType: ModuleChannel.viewPlayer,
                       creationParams: const {
-                        "uuid": "H23R9K94ZULVDVCF111A",
-                        "pass": "Js2nvQ",
+                        "uuid": "82TZ1VPJMDRLS3Z4111A",
+                        "pass": "ZRFFHp",
                         "height": 0,
                         "width": 0,
                         "type": 0,
@@ -36,6 +46,9 @@ class _CameraPlayerState extends State<CameraPlayer> {
                       },
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
+                      onPlatformViewCreated: (id) {
+                      channelPlayer = const  MethodChannel('channelCameraPlayer');
+                      },
                     )
                   : UiKitView(
                       viewType: ModuleChannel.viewPlayer,
@@ -50,7 +63,11 @@ class _CameraPlayerState extends State<CameraPlayer> {
                       },
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
-                    ))
+                    )),
+          JoyStick(radius: 100.0, stickRadius: 20, callback: callback,onPtzChanged: (value) {
+            print('onPtzChanged value => $value');
+            channelPlayer?.invokeMethod('methodPtz', value);
+          },) 
         ],
       ),
     );

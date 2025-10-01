@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.cameramulti.module.module.action.PlayerAction;
 import com.cameramulti.module.module.bean.DeviceBean;
 import com.cameramulti.module.module.bean.EventResult;
+import com.cameramulti.utils.AppConstants;
 import com.cameramulti.utils.SharedPreferencesUtils;
 import com.example.cameramulti.R;
 import com.tutk.IOTC.AVAPIs;
@@ -62,30 +63,31 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
     private final List<LinearLayout> viewParents = new ArrayList<>();
     private final List<ProgressBar> progressBars = new ArrayList<>();
 
-    private  ImageView ic_microphone, ic_audio;
+    private ImageView ic_microphone, ic_audio;
 
     private NativeMediaPlayer nativeMediaPlayer;
-    private int currentPlayers = 0 ;//标记当前选哪个播放器 控制音频
-   // dành cho audio
+    private int currentPlayers = 0;//标记当前选哪个播放器 控制音频
+    // dành cho audio
     private int audioSample = 48000; //device audio samplerate
     private int audioEncodeType = 1;// 1:AAC 2:pcm
 
     private int audioChannel = 2; //1：单通道 2：双通道
-   // audioSample,audioEncodeType,audioChannel
-   // dành cho audio
+    // audioSample,audioEncodeType,audioChannel
+    // dành cho audio
 
     // dành cho speak
     private int intercomSample = 48000;//intercom sampleRate
     private int intercomEncode = 1;// 1:AAC 2:pcm
-    private int intercomChannel  = 2; //1:单通道 2：双通道
+    private int intercomChannel = 2; //1:单通道 2：双通道
     // dành cho speak
-    private String UID = "",PWD = "";
-    private int mic,sound,type ; // mic && sound -- 1: hiện, 0 ẩn // type camera: 0 camera thường - 1 là camera HOME
+    private String UID = "", PWD = "";
+    private int mic, sound, type; // mic && sound -- 1: hiện, 0 ẩn // type camera: 0 camera thường - 1 là camera HOME
 
     private int screenWidth = 0, screenHeight = 0;
 
     private boolean isMuted = false;
     private boolean isSpeak = false;
+    private MethodChannel channel;
 
     public CameraPlayerWidget(Context context, Activity activity, int id, BinaryMessenger messenger, Object args) {
         this.activity = activity;
@@ -103,13 +105,13 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
             if (creationParams.containsKey("pass")) {
                 PWD = (String) creationParams.get("pass");
             }
-            if(creationParams.containsKey("mic")){
+            if (creationParams.containsKey("mic")) {
                 mic = ((Number) Objects.requireNonNull(creationParams.get("mic"))).intValue();
             }
-            if(creationParams.containsKey("sound")){
+            if (creationParams.containsKey("sound")) {
                 sound = ((Number) Objects.requireNonNull(creationParams.get("sound"))).intValue();
             }
-            if(creationParams.containsKey("type")){
+            if (creationParams.containsKey("type")) {
                 type = ((Number) Objects.requireNonNull(creationParams.get("type"))).intValue();
             }
             if (creationParams.containsKey("width")) {
@@ -123,6 +125,26 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
         myRequetPermission();
         initDeviceSource();
         initView();
+
+        channel = new MethodChannel(messenger, AppConstants.CHANNEL_CAMERA_PLAYER);
+        channel.setMethodCallHandler(new MethodChannel.MethodCallHandler() {
+            @Override
+            public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+                if (call.method.equals("methodPtz")) {// Nhận tham số int từ Flutter
+                    Integer code = (call.arguments instanceof Integer) ? (Integer) call.arguments : null;
+                    if (code == null) {
+                        result.error("ARG_ERROR", "code is null", null);
+                        return; // QUAN TRỌNG
+                    }
+                    Log.d(TAG, "methodPtz code=" + code);
+                    ptzCamera(code);
+                    result.success(true);
+                } else {
+                    result.notImplemented();
+                }
+            }
+        });
+
     }
 
     private void initTUTK() {
@@ -167,7 +189,7 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
         if (screenHeight > 0 || screenWidth > 0) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screenWidth, screenHeight);
             playerParent.setLayoutParams(params);
-        }  else  if (screenWidth == 0 || screenHeight == 0) {
+        } else if (screenWidth == 0 || screenHeight == 0) {
             ViewTreeObserver obse = playerParent.getViewTreeObserver();
             obse.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -202,13 +224,13 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
 
         int width = (players.size() == 1) ? screenWidth : screenWidth / 2;
 
-        GLPlayView  playView = new GLPlayView(activity,players.get(index).getPlayerId(),width,screenHeight,players.get(index).getDeviceUid());
+        GLPlayView playView = new GLPlayView(activity, players.get(index).getPlayerId(), width, screenHeight, players.get(index).getDeviceUid());
         playView.getHolder().addCallback(this);
         viewParents.get(index).addView(playView);
         players.get(index).setGlPlayView(playView);
         players.get(index).getPlayerAction().setStartRead(true);
-        nativeMediaPlayer.NativeCreateMediaPlayer(playView,"",players.get(index).getDeviceUid(),0,players.get(index).getPlayerId(),1);
-        SharedPreferencesUtils.getInstance().saveDeviceId(UID,PWD);
+        nativeMediaPlayer.NativeCreateMediaPlayer(playView, "", players.get(index).getDeviceUid(), 0, players.get(index).getPlayerId(), 1);
+        SharedPreferencesUtils.getInstance().saveDeviceId(UID, PWD);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -242,7 +264,7 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
             @Override
             public void run() {
                 //用子线程调用
-                players.get(currentPlayers).getPlayerAction().startAudioStream(audioSample,type == 0 ? 1 : 2,type == 0 ? 2 : 1);
+                players.get(currentPlayers).getPlayerAction().startAudioStream(audioSample, type == 0 ? 1 : 2, type == 0 ? 2 : 1);
             }
         }).start();
     }
@@ -258,8 +280,8 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
     }
 
     private void openSpeak() {
-        boolean resul = players.get(currentPlayers).getPlayerAction().startRecord(intercomSample,type == 0 ? 1 : 2,type == 0 ? 2 : 1);
-        if(resul){
+        boolean resul = players.get(currentPlayers).getPlayerAction().startRecord(intercomSample, type == 0 ? 1 : 2, type == 0 ? 2 : 1);
+        if (resul) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -273,13 +295,13 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
         players.get(currentPlayers).getPlayerAction().stopRecord();
     }
 
-    private void ptz() {
-
+    private void ptzCamera(int ptz) {
+        players.get(currentPlayers).getPlayerAction().ptzControl(ptz);
     }
 
     @Override
     public void onClick(View view) {
-        if(view == ic_audio){
+        if (view == ic_audio) {
             isMuted = !isMuted;
             if (isMuted) {
                 openAudio();
@@ -289,7 +311,7 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
                 ic_audio.setImageResource(R.drawable.ic_volume_off);
             }
 
-        } else if(view == ic_microphone) {
+        } else if (view == ic_microphone) {
             isSpeak = !isSpeak;
             if (isSpeak) {
                 openSpeak();
@@ -319,7 +341,6 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
             stopPlayer(i);
         }
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -376,8 +397,6 @@ public class CameraPlayerWidget implements PlatformView, MethodChannel.MethodCal
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "Surface destroyed");
     }
-
-
 
 
 //    @Override
