@@ -1,4 +1,3 @@
-import 'package:cameramulti/components/joy_stick.dart';
 import 'package:cameramulti/utils/module_channel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +11,6 @@ class CameraPlayer extends StatefulWidget {
 }
 
 class _CameraPlayerState extends State<CameraPlayer> {
- MethodChannel? channelPlayer;
-
- void callback(x, y) {
-    print('callback x => $x and y $y');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,9 +39,7 @@ class _CameraPlayerState extends State<CameraPlayer> {
                       },
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
-                      onPlatformViewCreated: (id) {
-                      channelPlayer = const  MethodChannel('channelCameraPlayer');
-                      },
+                      onPlatformViewCreated: (id) {},
                     )
                   : UiKitView(
                       viewType: ModuleChannel.viewPlayer,
@@ -64,10 +55,6 @@ class _CameraPlayerState extends State<CameraPlayer> {
                       layoutDirection: TextDirection.ltr,
                       creationParamsCodec: const StandardMessageCodec(),
                     )),
-          JoyStick(radius: 100.0, stickRadius: 20, callback: callback,onPtzChanged: (value) {
-            print('onPtzChanged value => $value');
-            channelPlayer?.invokeMethod('methodPtz', value);
-          },) 
         ],
       ),
     );
